@@ -19,11 +19,13 @@ int main()
 
 	FILE *f;
 	long long a,b;
-	
+ 	
 	/*创建共享内存*/
-	shmid=shmget((key_t)5678,sizeof(struct shared_use_st),0666|IPC_CREAT);
+	shmid = shmget((key_t)1234567890, sizeof(struct shared_use_st) , 0666| IPC_CREAT);
+	//shmid=shmget((key_t)5678,sizeof(struct shared_use_st),0666|IPC_CREAT);
 	if(shmid==-1)
 	{
+	    perror("shmget");
 	    fprintf(stderr,"shmget failed\n");
 		exit(EXIT_FAILURE);
 	}
@@ -48,10 +50,8 @@ int main()
 	}
 	fscanf(f, "%lld", &shared_stuff->words);
 	fscanf(f, "%lld", &shared_stuff->size);
-	shared_stuff->vocab = (char *)malloc((long long)shared_stuff->words * max_w * sizeof(char));
-	
-
-    shared_stuff->M = (float *)malloc((long long)shared_stuff->words * (long long)shared_stuff->size * sizeof(float));
+//	shared_stuff->vocab = (char *)malloc((long long)shared_stuff->words * max_w * sizeof(char));
+//        shared_stuff->M = (float *)malloc((long long)shared_stuff->words * (long long)shared_stuff->size * sizeof(float));
     if(shared_stuff->M == NULL)
 	{
 		printf("Cannot allocate memory: %lld MB    %lld  %lld\n", (long long)shared_stuff->words * shared_stuff->size * sizeof(float) / 1048576, shared_stuff->words, shared_stuff->size);
@@ -69,7 +69,8 @@ int main()
 	}
 
 	fclose(f);
-
+	printf("%lld %lld",shared_stuff->words, shared_stuff->size);
+	printf("%s", shared_stuff->vocab);
 	printf("load success!");
 		
 	while(shared_stuff->words)

@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 
 	
 	/*创建共享内存*/
-	shmid=shmget((key_t)5678,sizeof(struct shared_use_st),0666|IPC_CREAT);
+	shmid=shmget((key_t)1234567890,sizeof(struct shared_use_st),0666|IPC_CREAT);
 	if(shmid==-1)
 	{
 	    fprintf(stderr,"shmget failed\n");
@@ -46,11 +46,13 @@ int main(int argc, char **argv)
 	if (argc < 2) {
 		printf("Usage: ./compute <QUERY>\nwhere QUERY is what the user search for\n");
 		return 0;
-	}	
-	
+	}
 	for (a = 0; a < N; a++) bestw[a] = (char *)malloc(max_size * sizeof(char));
-	shared_stuff->vocab = (char *)malloc((long long)shared_stuff->words * max_w * sizeof(char));
-   	shared_stuff->M = (float *)malloc((long long)shared_stuff->words * (long long)shared_stuff->size * sizeof(float));	
+
+	printf("%f %c",shared_stuff->M[0], shared_stuff->vocab[0]);
+	printf("%lld %lld",shared_stuff->words, shared_stuff->size);	
+
+
 	/*获取最相近的词*/
 	for (a = 0; a < N; a++) bestd[a] = 0;
     for (a = 0; a < N; a++) bestw[a][0] = 0;
@@ -76,7 +78,7 @@ int main(int argc, char **argv)
     cn++;
     for (a = 0; a < cn; a++)
 	{
-//		for (b = 0; b < shared_stuff->words; b++) if (!strcmp(&shared_stuff->vocab[b * max_w], st[a])) break;
+		for (b = 0; b < shared_stuff->words; b++) if (!strcmp(&shared_stuff->vocab[b * max_w], st[a])) break;
 		if (b == shared_stuff->words) b = -1;
 		bi[a] = b;
 		printf("\nWord: %s  Position in vocabulary: %lld\n", st[a], bi[a]);
@@ -92,9 +94,9 @@ int main(int argc, char **argv)
     for (b = 0; b < cn; b++)
 	{
 		if (bi[b] == -1) continue;
-//		for (a = 0; a < shared_stuff->size; a++) vec[a] += shared_stuff->M[a + bi[b] * shared_stuff->size];
+		for (a = 0; a < shared_stuff->size; a++) vec[a] += shared_stuff->M[a + bi[b] * shared_stuff->size];
     }
-/*    shared_stuff->len = 0;
+    shared_stuff->len = 0;
     for (a = 0; a < shared_stuff->size; a++) shared_stuff->len += vec[a] * vec[a];
     shared_stuff->len = sqrt(shared_stuff->len);
     for (a = 0; a < shared_stuff->size; a++) vec[a] /= shared_stuff->len;
@@ -113,15 +115,12 @@ int main(int argc, char **argv)
             strcpy(bestw[d], bestw[d - 1]);
           }
           bestd[a] = dist;
-          //strcpy(bestw[a], &shared_stuff->vocab[c * max_w]);
+          strcpy(bestw[a], &shared_stuff->vocab[c * max_w]);
           break;
         }
       }
     }
     for (a = 0; a < N; a++) printf("%50s\t\t%f\n", bestw[a], bestd[a]);	
-*/	
-	shared_stuff->words = 0;
-	
 	
 	
 	/*删除共享内存*/
