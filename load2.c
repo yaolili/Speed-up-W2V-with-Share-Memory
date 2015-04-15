@@ -9,8 +9,6 @@
 #include <malloc.h>
 #include "mystruct.h"
 
-
-
 int main()
 {
 	void *shared_memory=(void *)0;
@@ -44,14 +42,13 @@ int main()
 	
 	/*读取二进制文件 */
 	f = fopen("GoogleNews-vectors-negative300.bin","rb");	
-	if (f == NULL) {
+	if (f == NULL) 
+	{
 		printf("Input file not found\n");
 		return -1;
 	}
 	fscanf(f, "%lld", &shared_stuff->words);
 	fscanf(f, "%lld", &shared_stuff->size);
-//	shared_stuff->vocab = (char *)malloc((long long)shared_stuff->words * max_w * sizeof(char));
-//        shared_stuff->M = (float *)malloc((long long)shared_stuff->words * (long long)shared_stuff->size * sizeof(float));
     if(shared_stuff->M == NULL)
 	{
 		printf("Cannot allocate memory: %lld MB    %lld  %lld\n", (long long)shared_stuff->words * shared_stuff->size * sizeof(float) / 1048576, shared_stuff->words, shared_stuff->size);
