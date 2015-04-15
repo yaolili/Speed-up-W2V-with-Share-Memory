@@ -29,7 +29,6 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
-    /*映射共享内存*/
     shared_memory=shmat(shmid,(void *)0,0);
     if(shared_memory==(void *)-1)
     {
@@ -38,7 +37,6 @@ int main(int argc, char **argv)
     }
     //printf("Memory attached at %X\n",(int)shared_memory);
 
-    /*让结构体指针指向这块共享内存*/
     shared_stuff=(struct shared_use_st *)shared_memory;
     
     //printf("%lld %lld",shared_stuff->words,shared_stuff->size);
@@ -50,7 +48,6 @@ int main(int argc, char **argv)
     }
     for (a = 0; a < N; a++) bestw[a] = (char *)malloc(max_size * sizeof(char));
 
-    /*获取最相近的词*/
     for (a = 0; a < N; a++) bestd[a] = 0;
     for (a = 0; a < N; a++) bestw[a][0] = 0;
     strcpy(st1, argv[1]);
@@ -123,7 +120,6 @@ int main(int argc, char **argv)
     //for (a = 0; a < N; a++) printf("%50s\t\t%f\n", bestw[a], bestd[a]);   
     for (a = 0; a< N; a++) printf("%s\n",bestw[a]);
     
-    /*删除共享内存*/
     if(shmdt(shared_memory)==-1)
     {
         fprintf(stderr,"shmdt failed\n");
