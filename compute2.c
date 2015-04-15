@@ -20,8 +20,6 @@ int main(int argc, char **argv)
     float bestd[N],vec[max_size],dist;
     char st1[max_size],st[100][max_size],*bestw[N];
 
-    
-    /*创建共享内存*/
     shmid=shmget((key_t)1234567890,sizeof(struct shared_use_st),0666|IPC_CREAT);
     if(shmid==-1)
     {
